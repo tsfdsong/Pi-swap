@@ -22,15 +22,15 @@ contract PAISwap is Ownable {
         address msgSender = msg.sender;
         require(pai.allowance(msgSender,address(this)) >= amount, "PAISwap: token allowance less than approve");
 
-        require(pai.transferFrom(msgSender,address(this),amount),"PAISwap: token transfer failed");
+        require(pai.transferFrom(msgSender,address(this),amount),"PAISwap: token transferFrom failed");
 
-        require(pnft.transferFrom(address(this),msgSender,amount),"PAISwap: token transfer failed");
+        require(pnft.transfer(msgSender,amount),"PAISwap: token transfer failed");
     }
 
     function withdraw(uint256 amount) external onlyOwner {
         uint256 totalAmount = pai.balanceOf(address(this));
 
         require(totalAmount >= amount, "PAISwap: balance not enough");
-        require(pai.transferFrom(address(this),owner(),amount),"PAISwap: token transfer failed");
+        require(pai.transfer(owner(),amount),"PAISwap: token transfer failed");
     }
 }

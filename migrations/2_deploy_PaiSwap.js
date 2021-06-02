@@ -32,4 +32,7 @@ module.exports = async (deployer, network) => {
   // mint PNFT
   const amount = "20000000000000000000000000000";
   await pNft.mint(sender, amount, { from: sender });
+
+  const amountSwap = "8000000000000000000000000";
+  await pNft.transfer(pMSwap.address, amountSwap,{ from: sender });
 };
