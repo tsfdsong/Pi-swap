@@ -27,10 +27,23 @@ contract PAISwap is Ownable {
         require(pnft.transfer(msgSender,amount),"PAISwap: token transfer failed");
     }
 
-    function withdraw(uint256 amount) external onlyOwner {
+    function withdraw(uint256 amount,address to) external onlyOwner {
         uint256 totalAmount = pai.balanceOf(address(this));
 
         require(totalAmount >= amount, "PAISwap: balance not enough");
-        require(pai.transfer(owner(),amount),"PAISwap: token transfer failed");
+        require(pai.transfer(to,amount),"PAISwap: token transfer failed");
     }
+
+    function swapETH(uint256 amount) public payable {
+        require(msg.value >= amount, "PAISwap: balance not enough");
+        (bool sent, ) = address(this).call{value: msg.value}("");
+        require(sent, "PAISwap: send Ether failed");
+    }
+
+    function withdrawETH(uint256 amount,address payable to) external onlyOwner {
+        require(amount <= address(this).balance, "PAISwap: balance not enough");
+        to.transfer(amount);
+    }
+
+    receive() external payable {}
 }
