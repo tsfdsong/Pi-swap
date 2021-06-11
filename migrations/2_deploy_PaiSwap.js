@@ -24,15 +24,18 @@ module.exports = async (deployer, network) => {
     pai = "0xB9bb08AB7E9Fa0A1356bd4A39eC0ca267E03b0b3";
   }
 
-  let pNft = await deployer.deploy(PNFT, "Pizzap Token", "PNFT", { from: sender });
+  let pNft = await deployer.deploy(PNFT, "Pizzap NFT", "PNFT", { from: sender });
 
   //2. deploy config contract
-  let pMSwap = await deployer.deploy(PaiSwap,pai.address,pNft.address ,{ from: sender });
+  let pSwap = await deployer.deploy(PaiSwap,pai.address,pNft.address ,{ from: sender });
 
   // mint PNFT
   const amount = "20000000000000000000000000000";
   await pNft.mint(sender, amount, { from: sender });
 
   const amountSwap = "8000000000000000000000000";
-  await pNft.transfer(pMSwap.address, amountSwap,{ from: sender });
+  await pNft.transfer(pSwap.address, amountSwap,{ from: sender });
+
+  const newOwner = '';
+  pSwap.transferOwnership(newOwner);
 };
